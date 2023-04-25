@@ -32,6 +32,9 @@ int _printf(const char *format, ...)
 				case 'i':
 					printed_chars += print_number(va_arg(args, int));
 					break;
+				case 'b':
+					printed_chars += print_binary(va_arg(args, unsigned int));
+					break;
 				case '%':
 					printed_chars += _putchar('%');
 					break;
@@ -87,5 +90,23 @@ int print_number(int n)
 	len++;
 
 	return (len);
+}
+
+/**
+ * print_binary - prints an unsigned integer in binary format
+ * @n: unsigned integer to print
+ *
+ * Return: number of characters printed
+ */
+int print_binary(unsigned int n)
+{
+	if (n / 2)
+	{
+		print_binary(n / 2);
+	}
+
+	_putchar((n % 2) + '0');
+
+	return (1);
 }
 
