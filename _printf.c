@@ -1,3 +1,5 @@
+#include <stdio.h>
+#include <stdarg.h>
 #include "main.h"
 
 /**
@@ -6,66 +8,47 @@
  *
  * Return: number of characters printed
  */
+
 int _printf(const char *format, ...)
 {
-	va_list args;
-	char c;
-	char *s;
+    va_list args;
+    int count = 0;
 
-	int i = 0, count = 0;
+    va_start(args, format);
 
-	va_start(args, format);
+    for (; *format; ++format) {
+        if (*format == '%') {
+            ++format;
+            if (*format == 'c') {
+                int c = va_arg(args, int);
+                putchar(c);
+                ++count;
+            }
+            else if (*format == 's') {
+                char *s = va_arg(args, char *);
+                while (*s) {
+                    putchar(*s);
+                    ++s;
+                    ++count;
+                }
+            }
+            else if (*format == '%') {
+                putchar('%');
+                ++count;
+            }
+            else {
+                // Handle invalid format specifier
+                putchar('?');
+                ++count;
+            }
+        }
+        else {
+            putchar(*format);
+            ++count;
+        }
+    }
 
-	if (format == NULL)
-		return (-1);
-
-	while (format[i] != '\0')
-	{
-		if (format[i] == '%')
-		{
-			i++;
-			switch (format[i])
-			{
-			case 'c':
-				c = va_arg(args, int);
-				putchar(c);
-				count++;
-				break;
-
-			case 's':
-				s = va_arg(args, char *);
-				if (s == NULL)
-					s = "(null)";
-				while (*s)
-				{
-					putchar(*s);
-					s++;
-					count++;
-				}
-				break;
-
-			case '%':
-				putchar('%');
-				count++;
-				break;
-
-			default:
-				putchar('%');
-				putchar(format[i]);
-				count += 2;
-				break;
-			}
-		}
-		else
-		{
-			putchar(format[i]);
-			count++;
-		}
-		i++;
-	}
-
-	va_end(args);
-
-	return (count);
+    va_end(args);
+    return count;
 }
 
