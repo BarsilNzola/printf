@@ -1,4 +1,5 @@
-#include <stdio.h>
+#include <unistd.h>
+#include <stdlib.h>
 #include <stdarg.h>
 #include "main.h"
 
@@ -12,6 +13,7 @@ int _printf(const char *format, ...)
 {
     int count = 0;
     va_list args;
+    char *str;
 
     va_start(args, format);
 
@@ -20,31 +22,29 @@ int _printf(const char *format, ...)
         if (*format == '%')
         {
             format++;
-            if (*format == 'c')
+            switch (*format)
             {
-                char c = va_arg(args, int);
-                putchar(c);
-                count++;
-            }
-            else if (*format == 's')
-            {
-                char *str = va_arg(args, char *);
-                while (*str)
-                {
-                    putchar(*str++);
+                case 'c':
+                    putchar(va_arg(args, int));
                     count++;
-                }
-            }
-            else if (*format == '%')
-            {
-                putchar('%');
-                count++;
-            }
-            else
-            {
-                putchar('%');
-                putchar(*format);
-                count += 2;
+                    break;
+                case 's':
+                    str = va_arg(args, char *);
+                    while (*str)
+                    {
+                        putchar(*str++);
+                        count++;
+                    }
+                    break;
+                case '%':
+                    putchar('%');
+                    count++;
+                    break;
+                default:
+                    putchar('%');
+                    putchar(*format);
+                    count += 2;
+                    break;
             }
         }
         else
