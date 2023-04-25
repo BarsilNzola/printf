@@ -1,72 +1,26 @@
 #include "main.h"
+#include "printf_functions.c"
 
 /**
- * print_char - Prints a character to stdout
- * @c: The character to print
+ * _printf - prints formatted output
+ * @format: character string
  *
- * Return: The number of characters printed
+ * Return: number of characters printed
  */
-int print_char(va_list c)
+int _printf(const char *format, ...)
 {
-  return (_putchar(va_arg(c, int)));
-}
+	va_list args;
+	int chars_printed;
 
-/**
- * print_string - Prints a string to stdout
- * @s: The string to print
- *
- * Return: The number of characters printed
- */
-int print_string(va_list s)
-{
-  char *str;
+	if (format == NULL)
+		return (-1);
 
-  str = va_arg(s, char *);
-  if (str == NULL)
-    str = "(null)";
-  return (puts(str));
-}
+	va_start(args, format);
 
-/**
- * print_integer - Prints an integer to stdout
- * @i: The integer to print
- *
- * Return: The number of characters printed
- */
-int print_integer(va_list i)
-{
-  int len = 0;
-  int n = va_arg(i, int);
-  unsigned int num;
+	chars_printed = parse_format_string((char *)format, args);
 
-  if (n < 0)
-  {
-    len += _putchar('-');
-    num = -n;
-  }
-  else
-    num = n;
+	va_end(args);
 
-  len += print_integer_helper(num);
-
-  return (len);
-}
-
-/**
- * print_integer_helper - Recursive function to print an integer to stdout
- * @n: The integer to print
- *
- * Return: The number of digits printed
- */
-int print_integer_helper(int n)
-{
-  int len = 1;
-
-  if (n / 10)
-    len += print_integer_helper(n / 10);
-
-  _putchar(n % 10 + '0');
-
-  return (len);
+	return (chars_printed);
 }
 
