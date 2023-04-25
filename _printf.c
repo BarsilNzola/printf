@@ -1,51 +1,72 @@
 #include "main.h"
 
 /**
- * _printf - formatted output conversion and print data.
- * @format: input string.
+ * print_char - Prints a character to stdout
+ * @c: The character to print
  *
- * Return: number of chars printed.
+ * Return: The number of characters printed
  */
-int _printf(const char *format, ...)
+int print_char(va_list c)
 {
-	unsigned int i = 0, len = 0, ibuf = 0;
-	va_list arguments;
-	int (*function)(va_list, char *, unsigned int);
-	char *buffer;
-
-	va_start(arguments, format), buffer = malloc(sizeof(char) * 1024);
-	if (!format || !buffer || (format[i] == '%' && !format[i + 1]))
-		return (-1);
-	if (!format[i])
-		return (0);
-	for (i = 0; format && format[i]; i++)
-	{
-		if (format[i] == '%')
-		{
-			if (format[i + 1] == '\0')
-			{	print_buf(buffer, ibuf), free(buffer), va_end(arguments);
-				return (-1);
-			}
-			else
-			{	function = get_print_func(format, i + 1);
-				if (function == NULL)
-				{
-					if (format[i + 1] == ' ' && !format[i + 2])
-						return (-1);
-					handl_buf(buffer, format[i], ibuf), len++, i--;
-				}
-				else
-				{
-					len += function(arguments, buffer, ibuf);
-					i += ev_print_func(format, i + 1);
-				}
-			} i++;
-		}
-		else
-			handl_buf(buffer, format[i], ibuf), len++;
-		for (ibuf = len; ibuf > 1024; ibuf -= 1024)
-			;
-	}
-	print_buf(buffer, ibuf), free(buffer), va_end(arguments);
-	return (len);
+  return (_putchar(va_arg(c, int)));
 }
+
+/**
+ * print_string - Prints a string to stdout
+ * @s: The string to print
+ *
+ * Return: The number of characters printed
+ */
+int print_string(va_list s)
+{
+  char *str;
+
+  str = va_arg(s, char *);
+  if (str == NULL)
+    str = "(null)";
+  return (puts(str));
+}
+
+/**
+ * print_integer - Prints an integer to stdout
+ * @i: The integer to print
+ *
+ * Return: The number of characters printed
+ */
+int print_integer(va_list i)
+{
+  int len = 0;
+  int n = va_arg(i, int);
+  unsigned int num;
+
+  if (n < 0)
+  {
+    len += _putchar('-');
+    num = -n;
+  }
+  else
+    num = n;
+
+  len += print_integer_helper(num);
+
+  return (len);
+}
+
+/**
+ * print_integer_helper - Recursive function to print an integer to stdout
+ * @n: The integer to print
+ *
+ * Return: The number of digits printed
+ */
+int print_integer_helper(int n)
+{
+  int len = 1;
+
+  if (n / 10)
+    len += print_integer_helper(n / 10);
+
+  _putchar(n % 10 + '0');
+
+  return (len);
+}
+
