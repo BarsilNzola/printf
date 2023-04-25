@@ -4,51 +4,59 @@
 
 /**
  * _printf - prints output according to a format
- * @format: character string with format specifier
+ * @format: format string
  *
  * Return: number of characters printed
  */
-
 int _printf(const char *format, ...)
 {
-    va_list args;
     int count = 0;
+    va_list args;
 
     va_start(args, format);
 
-    for (; *format; ++format) {
-        if (*format == '%') {
-            ++format;
-            if (*format == 'c') {
-                int c = va_arg(args, int);
+    while (*format)
+    {
+        if (*format == '%')
+        {
+            format++;
+            if (*format == 'c')
+            {
+                char c = va_arg(args, int);
                 putchar(c);
-                ++count;
+                count++;
             }
-            else if (*format == 's') {
-                char *s = va_arg(args, char *);
-                while (*s) {
-                    putchar(*s);
-                    ++s;
-                    ++count;
+            else if (*format == 's')
+            {
+                char *str = va_arg(args, char *);
+                while (*str)
+                {
+                    putchar(*str++);
+                    count++;
                 }
             }
-            else if (*format == '%') {
+            else if (*format == '%')
+            {
                 putchar('%');
-                ++count;
+                count++;
             }
-            else {
-                // Handle invalid format specifier
-                putchar('?');
-                ++count;
+            else
+            {
+                putchar('%');
+                putchar(*format);
+                count += 2;
             }
         }
-        else {
+        else
+        {
             putchar(*format);
-            ++count;
+            count++;
         }
+        format++;
     }
 
     va_end(args);
-    return count;
+
+    return (count);
 }
 
