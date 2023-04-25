@@ -1,112 +1,62 @@
-#include "main.h"
+#include <stdio.h>
 #include <stdarg.h>
+#include "main.h"
 
 /**
- * _printf - produces output according to a format
- * @format: character string containing zero or more directives
+ * _printf - prints output according to a format
+ * @format: format string
  *
- * Return: the number of characters printed (excluding the null byte used to end output to strings)
+ * Return: number of characters printed
  */
 int _printf(const char *format, ...)
 {
-	va_list args;
-	int printed_chars = 0;
+    int count = 0;
+    va_list args;
 
-	va_start(args, format);
+    va_start(args, format);
 
-	while (*format)
-	{
-		if (*format == '%')
-		{
-			format++;
+    while (*format)
+    {
+        if (*format == '%')
+        {
+            format++;
+            if (*format == 'c')
+            {
+                char c = va_arg(args, int);
+                putchar(c);
+                count++;
+            }
+            else if (*format == 's')
+            {
+                char *str = va_arg(args, char *);
+                while (*str)
+                {
+                    putchar(*str++);
+                    count++;
+                }
+            }
+            else if (*format == '%')
+            {
+                putchar('%');
+                count++;
+            }
+            else
+            {
+                putchar('%');
+                putchar(*format);
+                count += 2;
+            }
+        }
+        else
+        {
+            putchar(*format);
+            count++;
+        }
+        format++;
+    }
 
-			switch (*format)
-			{
-				case 'c':
-					printed_chars += _putchar(va_arg(args, int));
-					break;
-				case 's':
-					printed_chars += _puts(va_arg(args, char *));
-					break;
-				case 'd':
-				case 'i':
-					printed_chars += print_number(va_arg(args, int));
-					break;
-				case 'b':
-					printed_chars += print_binary(va_arg(args, unsigned int));
-					break;
-				case '%':
-					printed_chars += _putchar('%');
-					break;
-				default:
-					_putchar('%');
-					_putchar(*format);
-					printed_chars += 2;
-					break;
-			}
-		}
-		else
-		{
-			_putchar(*format);
-			printed_chars++;
-		}
+    va_end(args);
 
-		format++;
-	}
-
-	va_end(args);
-
-	return (printed_chars);
-}
-
-/**
- * print_number - prints an integer
- * @n: integer to print
- *
- * Return: number of characters printed
- */
-int print_number(int n)
-{
-	unsigned int num;
-	int len = 0;
-
-	if (n < 0)
-	{
-		_putchar('-');
-		len++;
-		num = -n;
-	}
-	else
-	{
-		num = n;
-	}
-
-	if (num / 10)
-	{
-		len += print_number(num / 10);
-	}
-
-	_putchar((num % 10) + '0');
-	len++;
-
-	return (len);
-}
-
-/**
- * print_binary - prints an unsigned integer in binary format
- * @n: unsigned integer to print
- *
- * Return: number of characters printed
- */
-int print_binary(unsigned int n)
-{
-	if (n / 2)
-	{
-		print_binary(n / 2);
-	}
-
-	_putchar((n % 2) + '0');
-
-	return (1);
+    return (count);
 }
 
