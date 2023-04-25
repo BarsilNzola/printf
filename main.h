@@ -18,6 +18,7 @@ typedef struct format_specifier
     int (*handler)(va_list);
 } format_specifier_t;
 
+int _putchar(char c);
 int _printf(const char *format, ...);
 int print_char(va_list args);
 int print_string(va_list args);
