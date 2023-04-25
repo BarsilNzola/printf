@@ -28,6 +28,10 @@ int _printf(const char *format, ...)
 				case 's':
 					printed_chars += _puts(va_arg(args, char *));
 					break;
+				case 'd':
+				case 'i':
+					printed_chars += print_number(va_arg(args, int));
+					break;
 				case '%':
 					printed_chars += _putchar('%');
 					break;
@@ -50,5 +54,38 @@ int _printf(const char *format, ...)
 	va_end(args);
 
 	return (printed_chars);
+}
+
+/**
+ * print_number - prints an integer
+ * @n: integer to print
+ *
+ * Return: number of characters printed
+ */
+int print_number(int n)
+{
+	unsigned int num;
+	int len = 0;
+
+	if (n < 0)
+	{
+		_putchar('-');
+		len++;
+		num = -n;
+	}
+	else
+	{
+		num = n;
+	}
+
+	if (num / 10)
+	{
+		len += print_number(num / 10);
+	}
+
+	_putchar((num % 10) + '0');
+	len++;
+
+	return (len);
 }
 
