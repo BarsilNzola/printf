@@ -1,4 +1,4 @@
-#include "main.h"
+#include "main1.h"
 /**
  * print_integer - prints integers to base 10
  * @args: arguments to print
